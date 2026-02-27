@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Africano — Learn African Languages</title>
+  <meta name="description" content="Africano is a gamified African language learning platform and cultural library. Preserving what we were never meant to forget. Join the waitlist.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brown-deep:   #1A0F08;
+      --brown-dark:   #2C1810;
+      --brown-mid:    #4A3425;
+      --brown-warm:   #5C4A3A;
+      --gold:         #F2C67C;
+      --gold-soft:    #DFB491;
+      --gold-pale:    #F6D8A7;
+      --cream:        #FDF8EC;
+      --cream-mid:    #F2E6D4;
+      --beige:        #EAD9C4;
+      --text-dark:    #2C1810;
+      --text-mid:     #5C4A3A;
+      --text-light:   #FDF8EC;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+
+    /* ─── NOISE TEXTURE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.4;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 20px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(253,248,236,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(242,198,124,0.2);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo img {
+      height: 36px;
+      width: auto;
+    }
+
+    .nav-logo-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--brown-dark);
+      letter-spacing: -0.3px;
+    }
+
+    .nav-cta {
+      background: var(--brown-dark);
+      color: var(--cream);
+      border: none;
+      padding: 10px 24px;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .nav-cta:hover {
+      background: var(--brown-mid);
+      transform: translateY(-1px);
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(160deg, var(--cream) 0%, var(--cream-mid) 60%, var(--beige) 100%);
+    }
+
+    /* decorative circles */
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(242,198,124,0.18) 0%, transparent 70%);
+      top: -100px; right: -150px;
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(92,74,58,0.08) 0%, transparent 70%);
+      bottom: 0; left: -100px;
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--brown-mid);
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.2s;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(42px, 7vw, 88px);
+      font-weight: 900;
+      line-height: 1.05;
+      color: var(--brown-dark);
+      margin-bottom: 12px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.35s;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--brown-mid);
+    }
+
+    .hero-subtitle {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(16px, 2.5vw, 24px);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--text-mid);
+      margin-bottom: 48px;
+      max-width: 560px;
+      line-height: 1.6;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 0.5s;
+    }
+
+    .hero-turtle {
+      position: absolute;
+      right: 8%;
+      bottom: 12%;
+      width: 120px;
+      opacity: 0;
+      animation: fadeIn 1.2s ease forwards 1s, float 4s ease-in-out infinite 1.5s;
+    }
+
+    .hero-turtle-left {
+      position: absolute;
+      left: 6%;
+      top: 35%;
+      width: 70px;
+      opacity: 0;
+      transform: scaleX(-1);
+      animation: fadeIn 1.2s ease forwards 1.2s, float 5s ease-in-out infinite 2s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scaleX(1); }
+      50% { transform: translateY(-12px) scaleX(1); }
+    }
+
+    @keyframes floatFlipped {
+      0%, 100% { transform: translateY(0) scaleX(-1); }
+      50% { transform: translateY(-10px) scaleX(-1); }
+    }
+
+    .hero-turtle-left {
+      animation: fadeIn 1.2s ease forwards 1.2s, floatFlipped 5s ease-in-out infinite 2s;
+    }
+
+    /* ─── WAITLIST FORM ─── */
+    .waitlist-form {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 0.65s;
+    }
+
+    .waitlist-input {
+      padding: 14px 22px;
+      border-radius: 100px;
+      border: 2px solid var(--beige);
+      background: white;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      color: var(--brown-dark);
+      outline: none;
+      min-width: 260px;
+      transition: border-color 0.2s;
+    }
+
+    .waitlist-input:focus {
+      border-color: var(--gold);
+    }
+
+    .waitlist-input::placeholder {
+      color: #b0a090;
+    }
+
+    .waitlist-btn {
+      padding: 14px 32px;
+      border-radius: 100px;
+      border: none;
+      background: linear-gradient(135deg, var(--brown-dark), var(--brown-mid));
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(44,24,16,0.25);
+    }
+
+    .waitlist-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(44,24,16,0.35);
+    }
+
+    .hero-note {
+      font-size: 13px;
+      color: var(--text-mid);
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 0.8s;
+    }
+
+    /* ─── DIVIDER ─── */
+    .divider {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-soft));
+      margin: 0 auto;
+      border-radius: 2px;
+    }
+
+    /* ─── SECTION BASE ─── */
+    section {
+      padding: 100px 24px;
+    }
+
+    .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--brown-mid);
+      font-weight: 500;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(30px, 4vw, 52px);
+      font-weight: 700;
+      color: var(--brown-dark);
+      line-height: 1.15;
+      margin-bottom: 24px;
+    }
+
+    .section-title em {
+      font-style: italic;
+      color: var(--brown-mid);
+    }
+
+    .section-body {
+      font-size: 17px;
+      line-height: 1.8;
+      color: var(--text-mid);
+      max-width: 640px;
+    }
+
+    /* ─── WHAT IS AFRICANO ─── */
+    .what-section {
+      background: var(--brown-dark);
+      color: var(--cream);
+    }
+
+    .what-section .section-label { color: var(--gold-soft); }
+    .what-section .section-title { color: var(--cream); }
+    .what-section .section-title em { color: var(--gold); }
+    .what-section .section-body { color: var(--gold-soft); }
+
+    .what-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      margin-top: 60px;
+    }
+
+    .what-text {}
+
+    .what-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .stat-box {
+      background: rgba(242,198,124,0.1);
+      border: 1px solid rgba(242,198,124,0.2);
+      border-radius: 20px;
+      padding: 28px 24px;
+    }
+
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      font-weight: 900;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-desc {
+      font-size: 14px;
+      color: var(--gold-soft);
+      line-height: 1.5;
+    }
+
+    /* ─── HOW IT WORKS ─── */
+    .how-section {
+      background: var(--cream);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 64px;
+    }
+
+    .feature-card {
+      background: white;
+      border-radius: 24px;
+      padding: 36px 28px;
+      border: 1px solid var(--beige);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(44,24,16,0.1);
+    }
+
+    .feature-icon {
+      font-size: 36px;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .feature-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--brown-dark);
+      margin-bottom: 12px;
+    }
+
+    .feature-desc {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text-mid);
+    }
+
+    /* ─── WHY IT MATTERS ─── */
+    .why-section {
+      background: linear-gradient(160deg, var(--cream-mid) 0%, var(--beige) 100%);
+    }
+
+    .why-quote {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(22px, 3.5vw, 40px);
+      font-style: italic;
+      font-weight: 400;
+      color: var(--brown-dark);
+      line-height: 1.4;
+      max-width: 820px;
+      margin: 48px auto;
+      text-align: center;
+      padding: 0 24px;
+    }
+
+    .why-quote span {
+      color: var(--brown-mid);
+    }
+
+    /* ─── LANGUAGES ─── */
+    .lang-section {
+      background: var(--brown-dark);
+    }
+
+    .lang-section .section-label { color: var(--gold-soft); }
+    .lang-section .section-title { color: var(--cream); }
+    .lang-section .section-body { color: var(--gold-soft); }
+
+    .lang-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 48px;
+    }
+
+    .lang-pill {
+      background: rgba(242,198,124,0.12);
+      border: 1px solid rgba(242,198,124,0.3);
+      border-radius: 100px;
+      padding: 10px 22px;
+      font-size: 15px;
+      color: var(--gold-pale);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+
+    .lang-pill:hover {
+      background: rgba(242,198,124,0.22);
+    }
+
+    .lang-pill.coming {
+      opacity: 0.45;
+      font-style: italic;
+    }
+
+    .lang-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .lang-dot.coming {
+      background: var(--brown-warm);
+    }
+
+    /* ─── FINAL CTA ─── */
+    .cta-section {
+      background: linear-gradient(160deg, var(--cream) 0%, var(--cream-mid) 100%);
+      text-align: center;
+    }
+
+    .cta-turtle {
+      width: 80px;
+      margin: 0 auto 32px;
+      display: block;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .cta-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 5vw, 64px);
+      font-weight: 900;
+      color: var(--brown-dark);
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .cta-title em {
+      font-style: italic;
+      color: var(--brown-mid);
+    }
+
+    .cta-body {
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--text-mid);
+      max-width: 520px;
+      margin: 0 auto 48px;
+    }
+
+    /* ─── SOCIALS ─── */
+    .socials {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 48px;
+      flex-wrap: wrap;
+    }
+
+    .social-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 100px;
+      border: 1.5px solid var(--beige);
+      color: var(--text-mid);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+
+    .social-link:hover {
+      border-color: var(--gold);
+      color: var(--brown-dark);
+      background: rgba(242,198,124,0.1);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--brown-deep);
+      padding: 40px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: gap;
+      gap: 16px;
+    }
+
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .footer-note {
+      font-size: 13px;
+      color: var(--brown-warm);
+    }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      .hero-turtle { width: 80px; right: 4%; bottom: 8%; }
+      .hero-turtle-left { display: none; }
+      .what-grid { grid-template-columns: 1fr; gap: 48px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .what-stats { grid-template-columns: 1fr 1fr; }
+      footer { flex-direction: column; text-align: center; padding: 32px 24px; }
+    }
+
+    /* success state */
+    .success-msg {
+      display: none;
+      color: var(--brown-mid);
+      font-size: 15px;
+      font-style: italic;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">
+      <span class="nav-logo-text">Africano</span>
+    </a>
+    <a href="#waitlist" class="nav-cta">Join Waitlist</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <p class="hero-eyebrow">Language. Culture. Memory.</p>
+
+    <h1 class="hero-title">
+      Preserving what we were<br>
+      <em>never meant to forget.</em>
+    </h1>
+
+    <p class="hero-subtitle">
+      Africano is a gamified African language learning platform and cultural library, built for Africans at home and in the diaspora.
+    </p>
+
+    <div class="waitlist-form" id="waitlist">
+      <input class="waitlist-input" type="email" placeholder="Your email address" id="emailInput"/>
+      <button class="waitlist-btn" onclick="handleWaitlist()">Join the Waitlist</button>
+    </div>
+
+    <p class="hero-note">Pre-launch. Be the first to know when we go live.</p>
+    <p class="success-msg" id="successMsg">You're on the list. We'll be in touch. 🐢</p>
+
+    <img class="hero-turtle" src="https://i.imgur.com/placeholder.png" alt="" 
+         onerror="this.style.display='none'"
+         style="opacity:0; animation: fadeIn 1.2s ease forwards 1s, float 4s ease-in-out infinite 1.5s;"/>
+  </section>
+
+  <!-- WHAT IS AFRICANO -->
+  <section class="what-section">
+    <div class="section-inner">
+      <div class="what-grid">
+        <div class="what-text">
+          <span class="section-label">What is Africano</span>
+          <h2 class="section-title">
+            Language is not just<br>
+            <em>communication.</em><br>
+            It is memory infrastructure.
+          </h2>
+          <p class="section-body">
+            Nigeria alone has over 500 native tongues. Many are fading. 
+            Not because they were destroyed, but because they became inconvenient. 
+            Because schools taught us to be ashamed. Because technology was never built for our vowels.
+            <br><br>
+            Africano is being built to change that. One language at a time. One learner at a time.
+          </p>
+        </div>
+        <div class="what-stats">
+          <div class="stat-box">
+            <div class="stat-number">500+</div>
+            <div class="stat-desc">Native tongues in Nigeria alone</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">29</div>
+            <div class="stat-desc">Nigerian languages listed as endangered by UNESCO</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">1</div>
+            <div class="stat-desc">Language disappears every two weeks globally</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">15M+</div>
+            <div class="stat-desc">Africans in the diaspora cut off from their mother tongue</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY IT MATTERS -->
+  <section class="why-section">
+    <div class="section-inner" style="text-align:center;">
+      <span class="section-label" style="display:block;">Why It Matters</span>
+      <div class="divider"></div>
+    </div>
+    <blockquote class="why-quote">
+      "When a language disappears, it is not only words that vanish.<br>
+      It is worldview. Humour. Prayer. Philosophy.<br>
+      <span>A way of seeing the world that cannot be borrowed from anywhere else.</span>"
+    </blockquote>
+    <p class="section-body" style="text-align:center; margin:0 auto;">
+      Language shame is real. It was placed there carefully, by systems that needed people to believe their own culture was inferior. Africano exists to undo that, quietly and deliberately.
+    </p>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-section">
+    <div class="section-inner">
+      <span class="section-label">How It Works</span>
+      <h2 class="section-title">Built for the way<br><em>we actually learn.</em></h2>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <span class="feature-icon">🎮</span>
+          <h3 class="feature-title">Gamified Learning</h3>
+          <p class="feature-desc">Daily streaks, XP, achievements, and a learning path that grows with you. Not school. Not boring. Actually addictive.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🏺</span>
+          <h3 class="feature-title">Cultural Library</h3>
+          <p class="feature-desc">Proverbs, folklore, naming ceremonies, festivals, history. Language in context. The words and the world they came from.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🗣️</span>
+          <h3 class="feature-title">Speaking Practice</h3>
+          <p class="feature-desc">Pronunciation exercises built for tonal languages. Diacritics respected. Accents honoured. Google Translate will not be supervising.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🌍</span>
+          <h3 class="feature-title">Diaspora-First</h3>
+          <p class="feature-desc">Built for the child in London who understands but cannot reply. For the grandchild in Houston who wants to pray in their language.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">📚</span>
+          <h3 class="feature-title">Multiple Languages</h3>
+          <p class="feature-desc">Starting with Nigerian languages, expanding pan-African. Yoruba, Igbo, Hausa, Igala, and more. This is not a one-tribe app.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🐢</span>
+          <h3 class="feature-title">Go at Your Pace</h3>
+          <p class="feature-desc">Slow and steady. The tortoise is our mascot for a reason. Language reclamation is not a sprint. We are building for the long game.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LANGUAGES -->
+  <section class="lang-section">
+    <div class="section-inner">
+      <span class="section-label">Languages</span>
+      <h2 class="section-title">Where we are starting.<br><em>And where we are going.</em></h2>
+      <p class="section-body">We are beginning with Nigerian languages, with a clear path to pan-African expansion. Every language added is a community protected.</p>
+
+      <div class="lang-pills">
+        <div class="lang-pill"><span class="lang-dot"></span> Yoruba</div>
+        <div class="lang-pill"><span class="lang-dot"></span> Igbo</div>
+        <div class="lang-pill"><span class="lang-dot"></span> Hausa</div>
+        <div class="lang-pill"><span class="lang-dot"></span> Igala</div>
+        <div class="lang-pill coming"><span class="lang-dot coming"></span> Tiv — coming</div>
+        <div class="lang-pill coming"><span class="lang-dot coming"></span> Efik — coming</div>
+        <div class="lang-pill coming"><span class="lang-dot coming"></span> Ijaw — coming</div>
+        <div class="lang-pill coming"><span class="lang-dot coming"></span> Swahili — coming</div>
+        <div class="lang-pill coming"><span class="lang-dot coming"></span> Twi — coming</div>
+        <div class="lang-pill coming"><span class="lang-dot coming"></span> Zulu — coming</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="cta-section">
+    <div class="section-inner" style="text-align:center;">
+      <h2 class="cta-title">
+        Our tongues are slow to die.<br>
+        <em>Let us not be slow to act.</em>
+      </h2>
+      <p class="cta-body">
+        Africano is in pre-launch. Join the waitlist and be part of the community building this from the ground up.
+      </p>
+
+      <div class="waitlist-form" style="justify-content:center;">
+        <input class="waitlist-input" type="email" placeholder="Your email address" id="emailInput2"/>
+        <button class="waitlist-btn" onclick="handleWaitlist2()">Join the Waitlist</button>
+      </div>
+      <p class="hero-note">No spam. No "good morning family" emails. Just updates that matter.</p>
+      <p class="success-msg" id="successMsg2"></p>
+
+      <div class="socials">
+        <a class="social-link" href="#" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Twitter / X
+        </a>
+        <a class="social-link" href="#" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          Instagram
+        </a>
+        <a class="social-link" href="#" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.28 8.28 0 004.83 1.53V6.77a4.85 4.85 0 01-1.06-.08z"/></svg>
+          TikTok
+        </a>
+        <a class="social-link" href="#" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Africano 🐢</div>
+    <div class="footer-note">© 2025 Africano. Building slowly. Intentionally.</div>
+  </footer>
+
+  <script>
+    function handleWaitlist() {
+      const email = document.getElementById('emailInput').value;
+      if (!email || !email.includes('@')) {
+        document.getElementById('emailInput').style.borderColor = '#c0392b';
+        return;
+      }
+      document.getElementById('emailInput').style.borderColor = '#4A8B5C';
+      const msg = document.getElementById('successMsg');
+      msg.textContent = "You're on the list. We'll be in touch. 🐢";
+      msg.style.display = 'block';
+    }
+
+    function handleWaitlist2() {
+      const email = document.getElementById('emailInput2').value;
+      if (!email || !email.includes('@')) {
+        document.getElementById('emailInput2').style.borderColor = '#c0392b';
+        return;
+      }
+      document.getElementById('emailInput2').style.borderColor = '#4A8B5C';
+      const msg = document.getElementById('successMsg2');
+      msg.textContent = "You're on the list. We'll be in touch. 🐢";
+      msg.style.display = 'block';
+    }
+
+    // Scroll-triggered fade-ins
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.feature-card, .stat-box, .lang-pill').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(24px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>
